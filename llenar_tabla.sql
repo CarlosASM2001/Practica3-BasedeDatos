@@ -136,13 +136,3 @@ select * from combo_producto;
 select * from factura;
 select * from factura_producto;
 select * from producto;
-
-/*
--- Limpiar tablas
-drop TABLE factura_producto;
-drop TABLE factura;
-drop  TABLE cliente;
-drop  TABLE combo_producto;
-drop  TABLE combo;
-drop  TABLE producto;
-*/
