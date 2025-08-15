@@ -26,9 +26,9 @@ BEGIN
     (4, 'Caracas', 'Distrito Capital', 'Capital', 'Venezuela'),
     (5, 'Barquisimeto', 'Lara', 'Centro', 'Venezuela');
 
-  -- 3) Upsert DIM_cliente solo para clientes con compras en p_fecha
+  -- 3) Upsert DIM_cliente (todos)
   INSERT INTO DIM_cliente (id, nombre, sexo, fecha_nacimiento, rango_edad)
-  SELECT DISTINCT
+  SELECT
     c.id,
     c.nombre,
     c.sexo,
@@ -44,22 +44,17 @@ BEGIN
       WHEN TIMESTAMPDIFF(YEAR, c.fecha_nacimiento, CURDATE()) BETWEEN 55 AND 64 THEN '55-64'
       ELSE '65+'
     END AS rango_edad
-  FROM factura f
-  JOIN cliente c ON c.id = f.id_cliente
-  WHERE f.fecha = p_fecha
+  FROM cliente c
   ON DUPLICATE KEY UPDATE
     nombre = VALUES(nombre),
     sexo = VALUES(sexo),
     fecha_nacimiento = VALUES(fecha_nacimiento),
     rango_edad = VALUES(rango_edad);
 
-  -- 4) Upsert DIM_producto solo para productos vendidos en p_fecha
+  -- 4) Upsert DIM_producto (todos)
   INSERT INTO DIM_producto (id, nombre)
-  SELECT DISTINCT p.id, p.nombre
-  FROM factura_producto fp
-  JOIN factura f ON f.id = fp.id_factura
-  JOIN producto p ON p.id = fp.id_producto
-  WHERE f.fecha = p_fecha
+  SELECT p.id, p.nombre
+  FROM producto p
   ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 
   -- 5) FACT_visita: upsert por cliente-fecha (primeras compras quedan NULL)
