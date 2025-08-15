@@ -20,23 +20,25 @@ BEGIN
   FROM producto p
   ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 
-  -- 2. Llenar DIM_cliente
-  INSERT INTO DIM_cliente (id, nombre, sexo, fecha_nacimiento, cliente_tipo)
+  -- 2. Llenar DIM_cliente con rango de edad
+  INSERT INTO DIM_cliente (id, nombre, sexo, fecha_nacimiento, rango_edad)
   SELECT
     id,
     nombre,
     sexo,
     fecha_nacimiento,
     CASE
-      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) < 18 THEN 'nino'
-      ELSE 'adulto'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) < 13 THEN 'nino'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 13 AND 17 THEN 'adolescente'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 18 AND 64 THEN 'adulto'
+      ELSE 'adulto_mayor'
     END
   FROM cliente
   ON DUPLICATE KEY UPDATE
     nombre = VALUES(nombre),
     sexo = VALUES(sexo),
     fecha_nacimiento = VALUES(fecha_nacimiento),
-    cliente_tipo = VALUES(cliente_tipo);
+    rango_edad = VALUES(rango_edad);
 
   -- 3. Llenar DIM_fecha (únicas desde factura)
   INSERT IGNORE INTO DIM_fecha (fecha, dia, mes, anio, nombre_dia, nombre_mes, dia_semana)

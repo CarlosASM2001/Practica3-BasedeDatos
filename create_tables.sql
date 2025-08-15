@@ -92,7 +92,7 @@ CREATE TABLE DIM_cliente (
     nombre VARCHAR(100),
     sexo CHAR(1),
     fecha_nacimiento DATE,
-    cliente_tipo ENUM('nino', 'adulto') 
+    rango_edad ENUM('nino', 'adolescente', 'adulto', 'adulto_mayor')
 );
 
 
