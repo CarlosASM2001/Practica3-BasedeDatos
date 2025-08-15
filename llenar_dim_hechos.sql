@@ -10,6 +10,10 @@ BEGIN
   TRUNCATE TABLE FACT_visita;
   TRUNCATE TABLE FACT_ventaCombos;
 
+  -- Reset DIM_fecha para que sus IDs sigan el orden cronológico de la fecha
+  DELETE FROM DIM_fecha;
+  ALTER TABLE DIM_fecha AUTO_INCREMENT = 1;
+
   -- 1. Llenar DIM_producto
   INSERT INTO DIM_producto (id, nombre)
   SELECT p.id, p.nombre
@@ -44,7 +48,8 @@ BEGIN
     DAYNAME(fecha),
     MONTHNAME(fecha),
     DAYOFWEEK(fecha)
-  FROM factura;
+  FROM factura
+  ORDER BY fecha;
 
   -- 4. Llenar DIM_sucursal (ficticia)
   INSERT IGNORE INTO DIM_sucursal (id, ciudad, estado, region, pais)
@@ -65,22 +70,22 @@ BEGIN
   JOIN factura f ON f.id = fp.id_factura
   GROUP BY f.id_cliente, fp.id_producto;
 
-  -- 6. Llenar FACT_visita (primeras compras quedan NULL)
+  -- 6. Llenar FACT_visita (primeras compras quedan NULL; una fila por cliente y fecha)
   INSERT INTO FACT_visita (id_dim_cliente, id_dim_fecha, dias_desde_ultima_compra)
-  SELECT 
-    c.id,
+  SELECT
+    t.id_cliente,
     df.id,
-    DATEDIFF(
+    TIMESTAMPDIFF(DAY, t.prev_fecha, t.fecha) AS dias_desde_ultima_compra
+  FROM (
+    SELECT
+      f.id_cliente,
       f.fecha,
-      (
-        SELECT MAX(f2.fecha)
-        FROM factura f2
-        WHERE f2.id_cliente = c.id AND f2.fecha < f.fecha
-      )
-    )
-  FROM factura f
-  JOIN cliente c ON c.id = f.id_cliente
-  JOIN DIM_fecha df ON df.fecha = f.fecha;
+      LAG(f.fecha) OVER (PARTITION BY f.id_cliente ORDER BY f.fecha) AS prev_fecha
+    FROM (
+      SELECT DISTINCT id_cliente, fecha FROM factura
+    ) f
+  ) t
+  JOIN DIM_fecha df ON df.fecha = t.fecha;
 
   -- 7. Llenar FACT_ventaCombos
   INSERT INTO FACT_ventaCombos (

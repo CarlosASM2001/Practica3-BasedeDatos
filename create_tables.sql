@@ -117,8 +117,9 @@ CREATE TABLE FACT_visita(
     id BIGINT auto_increment NOT NULL,
     id_DIM_cliente BIGINT NOT NULL,
 	id_DIM_fecha BIGINT NOT NULL,
-    dias_desde_ultima_compra INT,
+    dias_desde_ultima_compra INT NULL,
     PRIMARY KEY(id),
+    UNIQUE KEY uq_fact_visita_cliente_fecha (id_DIM_cliente, id_DIM_fecha),
     FOREIGN KEY(id_DIM_cliente) REFERENCES DIM_cliente(id),
     FOREIGN KEY(id_DIM_fecha) REFERENCES DIM_fecha(id)
 );
