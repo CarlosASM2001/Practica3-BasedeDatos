@@ -130,6 +130,7 @@ CREATE TABLE FACT_venta_producto(
     id_DIM_producto BIGINT NOT NULL,
     cantidad_vendida INT NOT NULL,
     PRIMARY KEY(id),
+    UNIQUE KEY uq_FACT_venta_producto_cliente_producto (id_DIM_cliente, id_DIM_producto),
     FOREIGN KEY(id_DIM_cliente) REFERENCES DIM_cliente(id),
     FOREIGN KEY(id_DIM_producto) REFERENCES DIM_producto(id)
 );

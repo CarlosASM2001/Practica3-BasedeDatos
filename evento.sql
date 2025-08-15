@@ -7,7 +7,7 @@ ON SCHEDULE EVERY 1 DAY
 STARTS DATE_ADD(CURDATE(), INTERVAL 1 DAY) + INTERVAL 1 HOUR
 DO
 BEGIN
-  CALL llenar_dimensiones_hechos();
+  CALL llenar_dimensiones_hechos(CURDATE() - INTERVAL 1 DAY);
 END $$
 
 DELIMITER ;
