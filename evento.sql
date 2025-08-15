@@ -2,12 +2,12 @@ SET GLOBAL event_scheduler = ON;
 
 DELIMITER $$
 
-CREATE EVENT IF NOT EXISTS evento_llenado_hechos
+CREATE EVENT evento_llenado_hechos
 ON SCHEDULE EVERY 1 DAY
-STARTS TIMESTAMP(CURRENT_DATE, '01:00:00')
+STARTS DATE_ADD(CURDATE(), INTERVAL 1 DAY) + INTERVAL 1 HOUR
 DO
 BEGIN
-  CALL llenar_dimensiones_hechos();
+  CALL llenar_dimensiones_hechos(CURDATE() - INTERVAL 1 DAY);
 END $$
 
 DELIMITER ;

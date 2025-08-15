@@ -1,4 +1,5 @@
 create schema practica3final;
+USE practica3final;
 
 -- Carlos Alfredo Serrano Molina 28.457.792
 -- Axel Orlando Porras Gonzalez 29.545.523
@@ -61,7 +62,6 @@ CREATE TABLE factura_producto(
 CREATE TABLE DIM_producto (
     id BIGINT NOT NULL,
     nombre VARCHAR(55) NOT NULL,
-    precio DECIMAL(6,2),
     PRIMARY KEY (id)
 );
 
@@ -74,7 +74,8 @@ CREATE TABLE DIM_fecha (
     nombre_dia VARCHAR(20) NOT NULL,
     nombre_mes VARCHAR(20) NOT NULL,
     dia_semana INT NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_dim_fecha_fecha (fecha)
 );
 
 CREATE TABLE DIM_sucursal(
@@ -91,7 +92,7 @@ CREATE TABLE DIM_cliente (
     nombre VARCHAR(100),
     sexo CHAR(1),
     fecha_nacimiento DATE,
-    cliente_tipo ENUM('nino', 'adulto') 
+    rango_edad ENUM('0-5', '6-12', '13-17', '18-24', '25-34', '35-44', '45-54', '55-64', '65+')
 );
 
 
@@ -116,8 +117,9 @@ CREATE TABLE FACT_visita(
     id BIGINT auto_increment NOT NULL,
     id_DIM_cliente BIGINT NOT NULL,
 	id_DIM_fecha BIGINT NOT NULL,
-    dias_desde_ultima_compra INT,
+    dias_desde_ultima_compra INT NULL,
     PRIMARY KEY(id),
+    UNIQUE KEY uq_fact_visita_cliente_fecha (id_DIM_cliente, id_DIM_fecha),
     FOREIGN KEY(id_DIM_cliente) REFERENCES DIM_cliente(id),
     FOREIGN KEY(id_DIM_fecha) REFERENCES DIM_fecha(id)
 );
@@ -128,6 +130,7 @@ CREATE TABLE FACT_venta_producto(
     id_DIM_producto BIGINT NOT NULL,
     cantidad_vendida INT NOT NULL,
     PRIMARY KEY(id),
+    UNIQUE KEY uq_FACT_venta_producto_cliente_producto (id_DIM_cliente, id_DIM_producto),
     FOREIGN KEY(id_DIM_cliente) REFERENCES DIM_cliente(id),
     FOREIGN KEY(id_DIM_producto) REFERENCES DIM_producto(id)
 );
