@@ -1,4 +1,5 @@
 create schema practica3final;
+USE practica3final;
 
 -- Carlos Alfredo Serrano Molina 28.457.792
 -- Axel Orlando Porras Gonzalez 29.545.523
@@ -61,7 +62,6 @@ CREATE TABLE factura_producto(
 CREATE TABLE DIM_producto (
     id BIGINT NOT NULL,
     nombre VARCHAR(55) NOT NULL,
-    precio DECIMAL(6,2),
     PRIMARY KEY (id)
 );
 
@@ -74,7 +74,8 @@ CREATE TABLE DIM_fecha (
     nombre_dia VARCHAR(20) NOT NULL,
     nombre_mes VARCHAR(20) NOT NULL,
     dia_semana INT NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_dim_fecha_fecha (fecha)
 );
 
 CREATE TABLE DIM_sucursal(

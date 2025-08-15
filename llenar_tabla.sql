@@ -1,3 +1,5 @@
+USE practica3final;
+
 INSERT INTO combo (id, nombre)
 VALUES
 (1, 'Combo Básico'),
