@@ -1,0 +1,13 @@
+DROP TABLE factura_producto;
+DROP TABLE factura;
+DROP  TABLE cliente;
+DROP  TABLE combo_producto;
+DROP  TABLE combo;
+DROP  TABLE producto;
+DROP TABLE fact_visita;
+DROP TABLE fact_venta_producto;
+DROP TABLE FACT_ventaCombos;
+DROP TABLE DIM_producto;
+DROP TABLE dim_fecha;
+DROP TABLE dim_sucursal;
+DROP TABLE dim_cliente;
