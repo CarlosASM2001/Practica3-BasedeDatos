@@ -20,7 +20,7 @@ BEGIN
   FROM producto p
   ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 
-  -- 2. Llenar DIM_cliente con rango de edad (nino/adulto)
+  -- 2. Llenar DIM_cliente con rango de edad (bandas etarias)
   INSERT INTO DIM_cliente (id, nombre, sexo, fecha_nacimiento, rango_edad)
   SELECT
     id,
@@ -28,8 +28,15 @@ BEGIN
     sexo,
     fecha_nacimiento,
     CASE
-      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) < 18 THEN 'nino'
-      ELSE 'adulto'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 0 AND 5 THEN '0-5'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 6 AND 12 THEN '6-12'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 13 AND 17 THEN '13-17'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 18 AND 24 THEN '18-24'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 25 AND 34 THEN '25-34'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 35 AND 44 THEN '35-44'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 45 AND 54 THEN '45-54'
+      WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 55 AND 64 THEN '55-64'
+      ELSE '65+'
     END
   FROM cliente
   ON DUPLICATE KEY UPDATE
