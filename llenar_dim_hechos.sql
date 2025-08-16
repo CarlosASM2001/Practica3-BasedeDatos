@@ -128,3 +128,4 @@ SELECT * FROM DIM_cliente;
 SELECT * FROM FACT_visita;
 SELECT * FROM FACT_venta_producto;
 SELECT * FROM FACT_ventaCombos;
+

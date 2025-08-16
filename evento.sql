@@ -14,6 +14,6 @@ DELIMITER ;
 
 SHOW EVENTS;
 
-SHOW CREATE EVENT evento_llenado_hechos;
+SHOW CREATE EVENT evento_llenado_hechos3;
 
 
